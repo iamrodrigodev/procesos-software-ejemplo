@@ -351,7 +351,3 @@ Al iniciar la aplicación por primera vez, se cargan automáticamente 10 direcci
 8. Av. Aviación - San Borja
 9. Calle Libertad - Barranco
 10. Av. Brasil - Breña
-
-## Licencia
-
-UNLICENSED
