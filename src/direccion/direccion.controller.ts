@@ -4,6 +4,7 @@ import {
   Post,
   Put,
   Delete,
+  Patch,
   Body,
   Param,
   Query,
@@ -43,6 +44,11 @@ export class DireccionController {
     @Body() updateDireccionDto: UpdateDireccionDto,
   ): Promise<Direccion> {
     return this.direccionService.update(+id, updateDireccionDto);
+  }
+
+  @Patch(':id/visitas')
+  incrementarVisitas(@Param('id') id: string): Promise<Direccion> {
+    return this.direccionService.incrementarVisitas(+id);
   }
 
   @Delete(':id')

@@ -22,6 +22,9 @@ export class Direccion {
   @Column({ type: 'real' })
   longitud: number;
 
+  @Column({ type: 'integer', default: 0 })
+  cantidad_visitas: number;
+
   @CreateDateColumn({ type: 'datetime' })
   fecha_registro: Date;
 }

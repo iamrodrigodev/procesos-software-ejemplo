@@ -58,4 +58,13 @@ export class DireccionService {
       .limit(10)
       .getMany();
   }
+
+  async incrementarVisitas(id: number): Promise<Direccion> {
+    const direccion = await this.findOne(id);
+
+    direccion.cantidad_visitas += 1;
+    await this.direccionRepository.save(direccion);
+
+    return direccion;
+  }
 }

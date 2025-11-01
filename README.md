@@ -21,6 +21,7 @@ API RESTful desarrollada con NestJS para la gestión de direcciones geográficas
 | referencia | string | Referencia o punto de ubicación | Opcional |
 | latitud | number | Coordenada de latitud | Requerido, Rango: -90 a 90 |
 | longitud | number | Coordenada de longitud | Requerido, Rango: -180 a 180 |
+| cantidad_visitas | number | Contador de visitas a la dirección | Default: 0, Auto-generado |
 | fecha_registro | Date | Fecha y hora de creación | Auto-generado |
 
 ## Instalación
@@ -78,6 +79,7 @@ Content-Type: application/json
   "referencia": "Frente al centro comercial Jockey Plaza",
   "latitud": -12.0897,
   "longitud": -76.9789,
+  "cantidad_visitas": 0,
   "fecha_registro": "2025-10-31T20:30:15.000Z"
 }
 ```
@@ -105,6 +107,7 @@ Obtiene todas las direcciones registradas.
     "referencia": "Entre banco BCP y farmacia Inkafarma",
     "latitud": -12.0956,
     "longitud": -77.0362,
+    "cantidad_visitas": 15,
     "fecha_registro": "2025-10-31T19:18:30.000Z"
   },
   {
@@ -113,6 +116,7 @@ Obtiene todas las direcciones registradas.
     "referencia": "Frente al parque central",
     "latitud": -12.0964,
     "longitud": -77.0378,
+    "cantidad_visitas": 8,
     "fecha_registro": "2025-10-31T19:18:30.000Z"
   }
 ]
@@ -139,6 +143,7 @@ Obtiene una dirección específica por su identificador.
   "referencia": "Entre banco BCP y farmacia Inkafarma",
   "latitud": -12.0956,
   "longitud": -77.0362,
+  "cantidad_visitas": 15,
   "fecha_registro": "2025-10-31T19:18:30.000Z"
 }
 ```
@@ -174,6 +179,7 @@ Busca direcciones que coincidan parcialmente con el texto ingresado. Retorna má
     "referencia": "Al lado del centro comercial Larcomar",
     "latitud": -12.1205,
     "longitud": -77.0282,
+    "cantidad_visitas": 23,
     "fecha_registro": "2025-10-31T19:18:30.000Z"
   },
   {
@@ -182,6 +188,7 @@ Busca direcciones que coincidan parcialmente con el texto ingresado. Retorna má
     "referencia": "Entre óvalo Gutiérrez y parque Kennedy",
     "latitud": -12.1216,
     "longitud": -77.0301,
+    "cantidad_visitas": 31,
     "fecha_registro": "2025-10-31T19:18:30.000Z"
   }
 ]
@@ -228,13 +235,45 @@ Content-Type: application/json
   "referencia": "Nueva referencia actualizada",
   "latitud": -12.0897,
   "longitud": -76.9789,
+  "cantidad_visitas": 0,
   "fecha_registro": "2025-10-31T19:18:30.000Z"
 }
 ```
 
 ---
 
-### 6. Eliminar Dirección
+### 6. Incrementar Visitas
+
+Incrementa en 1 el contador de visitas de una dirección específica.
+
+**Endpoint:** `PATCH /direccion/:id/visitas`
+
+**Parámetros:**
+- `id` (path): ID de la dirección
+
+**Ejemplo:** `PATCH /direccion/1/visitas`
+
+**Respuesta Exitosa (200):**
+```json
+{
+  "id_direccion": 1,
+  "direccion_completa": "Av. Javier Prado Este 123, San Isidro, Lima",
+  "referencia": "Entre banco BCP y farmacia Inkafarma",
+  "latitud": -12.0956,
+  "longitud": -77.0362,
+  "cantidad_visitas": 16,
+  "fecha_registro": "2025-10-31T19:18:30.000Z"
+}
+```
+
+**Notas:**
+- Este endpoint no requiere body
+- Cada llamada incrementa el contador en 1
+- Útil para tracking de visitas o popularidad de direcciones
+
+---
+
+### 7. Eliminar Dirección
 
 Elimina una dirección del sistema.
 
@@ -286,6 +325,13 @@ Sin contenido en el body
 3. Configurar Headers y Body como en el ejemplo de crear
 4. Incluir solo los campos que deseas actualizar
 5. Click en "Send"
+
+### Ejemplo: Incrementar Visitas
+
+1. Crear nuevo request tipo PATCH
+2. URL: `{{base_url}}/direccion/1/visitas`
+3. No requiere Headers ni Body
+4. Click en "Send"
 
 ### Ejemplo: Eliminar Dirección
 
