@@ -1,98 +1,357 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# API de Gestión de Direcciones
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API RESTful desarrollada con NestJS para la gestión de direcciones geográficas con funcionalidad de autocompletado.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tecnologías
 
-## Description
+- NestJS 11
+- TypeORM
+- SQLite3
+- TypeScript
+- Class Validator
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Modelo de Datos
 
-## Project setup
+### Entidad: Direccion
+
+| Campo | Tipo | Descripción | Restricciones |
+|-------|------|-------------|---------------|
+| id_direccion | number | Identificador único | Primary Key, Auto-increment |
+| direccion_completa | string | Dirección completa | Requerido |
+| referencia | string | Referencia o punto de ubicación | Opcional |
+| latitud | number | Coordenada de latitud | Requerido, Rango: -90 a 90 |
+| longitud | number | Coordenada de longitud | Requerido, Rango: -180 a 180 |
+| fecha_registro | Date | Fecha y hora de creación | Auto-generado |
+
+## Instalación
 
 ```bash
-$ npm install
+# Instalar dependencias
+npm install
+
+# Compilar el proyecto
+npm run build
+
+# Iniciar en modo desarrollo
+npm run start:dev
+
+# Iniciar en modo producción
+npm run start:prod
 ```
 
-## Compile and run the project
+La aplicación inicia en `http://localhost:3000`
 
-```bash
-# development
-$ npm run start
+## Base de Datos
 
-# watch mode
-$ npm run start:dev
+La aplicación utiliza SQLite3 y crea automáticamente:
+- Archivo de base de datos: `database.sqlite`
+- 10 direcciones de ejemplo al iniciar por primera vez
 
-# production mode
-$ npm run start:prod
+## Endpoints
+
+### 1. Crear Dirección
+
+Crea una nueva dirección en el sistema.
+
+**Endpoint:** `POST /direccion`
+
+**Headers:**
+```
+Content-Type: application/json
 ```
 
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+**Body:**
+```json
+{
+  "direccion_completa": "Av. Javier Prado Este 4200, Santiago de Surco, Lima",
+  "referencia": "Frente al centro comercial Jockey Plaza",
+  "latitud": -12.0897,
+  "longitud": -76.9789
+}
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+**Respuesta Exitosa (201):**
+```json
+{
+  "id_direccion": 11,
+  "direccion_completa": "Av. Javier Prado Este 4200, Santiago de Surco, Lima",
+  "referencia": "Frente al centro comercial Jockey Plaza",
+  "latitud": -12.0897,
+  "longitud": -76.9789,
+  "fecha_registro": "2025-10-31T20:30:15.000Z"
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+**Validaciones:**
+- `direccion_completa`: Requerido, tipo string
+- `referencia`: Opcional, tipo string
+- `latitud`: Requerido, número entre -90 y 90
+- `longitud`: Requerido, número entre -180 y 180
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+### 2. Listar Todas las Direcciones
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Obtiene todas las direcciones registradas.
 
-## Support
+**Endpoint:** `GET /direccion`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+**Respuesta Exitosa (200):**
+```json
+[
+  {
+    "id_direccion": 1,
+    "direccion_completa": "Av. Javier Prado Este 123, San Isidro, Lima",
+    "referencia": "Entre banco BCP y farmacia Inkafarma",
+    "latitud": -12.0956,
+    "longitud": -77.0362,
+    "fecha_registro": "2025-10-31T19:18:30.000Z"
+  },
+  {
+    "id_direccion": 2,
+    "direccion_completa": "Calle Las Begonias 456, San Isidro, Lima",
+    "referencia": "Frente al parque central",
+    "latitud": -12.0964,
+    "longitud": -77.0378,
+    "fecha_registro": "2025-10-31T19:18:30.000Z"
+  }
+]
+```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 3. Obtener Dirección por ID
 
-## License
+Obtiene una dirección específica por su identificador.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+**Endpoint:** `GET /direccion/:id`
+
+**Parámetros:**
+- `id` (path): ID de la dirección
+
+**Ejemplo:** `GET /direccion/1`
+
+**Respuesta Exitosa (200):**
+```json
+{
+  "id_direccion": 1,
+  "direccion_completa": "Av. Javier Prado Este 123, San Isidro, Lima",
+  "referencia": "Entre banco BCP y farmacia Inkafarma",
+  "latitud": -12.0956,
+  "longitud": -77.0362,
+  "fecha_registro": "2025-10-31T19:18:30.000Z"
+}
+```
+
+**Respuesta Error (404):**
+```json
+{
+  "statusCode": 404,
+  "message": "Dirección con ID 999 no fue encontrada",
+  "error": "Not Found"
+}
+```
+
+---
+
+### 4. Autocompletar Dirección
+
+Busca direcciones que coincidan parcialmente con el texto ingresado. Retorna máximo 10 resultados.
+
+**Endpoint:** `GET /direccion/autocomplete`
+
+**Query Parameters:**
+- `parcial` (string): Texto a buscar en la dirección completa
+
+**Ejemplo:** `GET /direccion/autocomplete?parcial=Miraflores`
+
+**Respuesta Exitosa (200):**
+```json
+[
+  {
+    "id_direccion": 3,
+    "direccion_completa": "Av. Arequipa 789, Miraflores, Lima",
+    "referencia": "Al lado del centro comercial Larcomar",
+    "latitud": -12.1205,
+    "longitud": -77.0282,
+    "fecha_registro": "2025-10-31T19:18:30.000Z"
+  },
+  {
+    "id_direccion": 6,
+    "direccion_completa": "Calle Schell 890, Miraflores, Lima",
+    "referencia": "Entre óvalo Gutiérrez y parque Kennedy",
+    "latitud": -12.1216,
+    "longitud": -77.0301,
+    "fecha_registro": "2025-10-31T19:18:30.000Z"
+  }
+]
+```
+
+**Notas:**
+- La búsqueda es case-insensitive
+- Solo busca en el campo `direccion_completa`
+- Retorna array vacío si no hay coincidencias o el parámetro está vacío
+
+---
+
+### 5. Actualizar Dirección
+
+Actualiza parcial o totalmente una dirección existente.
+
+**Endpoint:** `PUT /direccion/:id`
+
+**Parámetros:**
+- `id` (path): ID de la dirección a actualizar
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Body (todos los campos son opcionales):**
+```json
+{
+  "direccion_completa": "Av. Javier Prado Este 4200, Santiago de Surco, Lima",
+  "referencia": "Nueva referencia actualizada",
+  "latitud": -12.0897,
+  "longitud": -76.9789
+}
+```
+
+**Ejemplo:** `PUT /direccion/1`
+
+**Respuesta Exitosa (200):**
+```json
+{
+  "id_direccion": 1,
+  "direccion_completa": "Av. Javier Prado Este 4200, Santiago de Surco, Lima",
+  "referencia": "Nueva referencia actualizada",
+  "latitud": -12.0897,
+  "longitud": -76.9789,
+  "fecha_registro": "2025-10-31T19:18:30.000Z"
+}
+```
+
+---
+
+### 6. Eliminar Dirección
+
+Elimina una dirección del sistema.
+
+**Endpoint:** `DELETE /direccion/:id`
+
+**Parámetros:**
+- `id` (path): ID de la dirección a eliminar
+
+**Ejemplo:** `DELETE /direccion/1`
+
+**Respuesta Exitosa (200):**
+Sin contenido en el body
+
+---
+
+## Uso en Postman
+
+### Configuración Inicial
+
+1. Crear nueva colección llamada "API Direcciones"
+2. Configurar variable de entorno `base_url` con valor `http://localhost:3000`
+
+### Ejemplo: Crear Dirección
+
+1. Crear nuevo request tipo POST
+2. URL: `{{base_url}}/direccion`
+3. Ir a pestaña "Headers"
+   - Key: `Content-Type`
+   - Value: `application/json`
+4. Ir a pestaña "Body"
+   - Seleccionar "raw"
+   - Seleccionar "JSON" en el dropdown
+   - Pegar el JSON del body
+5. Click en "Send"
+
+### Ejemplo: Autocompletar
+
+1. Crear nuevo request tipo GET
+2. URL: `{{base_url}}/direccion/autocomplete`
+3. Ir a pestaña "Params"
+   - Key: `parcial`
+   - Value: `Miraflores`
+4. Click en "Send"
+
+### Ejemplo: Actualizar Dirección
+
+1. Crear nuevo request tipo PUT
+2. URL: `{{base_url}}/direccion/1`
+3. Configurar Headers y Body como en el ejemplo de crear
+4. Incluir solo los campos que deseas actualizar
+5. Click en "Send"
+
+### Ejemplo: Eliminar Dirección
+
+1. Crear nuevo request tipo DELETE
+2. URL: `{{base_url}}/direccion/1`
+3. Click en "Send"
+
+## Errores Comunes
+
+### Error 400 - Bad Request
+
+Ocurre cuando la validación de datos falla.
+
+**Ejemplo:**
+```json
+{
+  "statusCode": 400,
+  "message": [
+    "latitud must not be greater than 90",
+    "direccion_completa should not be empty"
+  ],
+  "error": "Bad Request"
+}
+```
+
+**Solución:** Verificar que todos los campos cumplan con las validaciones especificadas.
+
+### Error 404 - Not Found
+
+Ocurre cuando se intenta acceder a una dirección que no existe.
+
+**Solución:** Verificar que el ID de la dirección sea correcto.
+
+## Estructura del Proyecto
+
+```
+src/
+├── direccion/
+│   ├── dto/
+│   │   ├── create-direccion.dto.ts
+│   │   └── update-direccion.dto.ts
+│   ├── entities/
+│   │   └── direccion.entity.ts
+│   ├── direccion.controller.ts
+│   ├── direccion.module.ts
+│   ├── direccion.service.ts
+│   └── direccion.seed.ts
+├── app.module.ts
+└── main.ts
+```
+
+## Datos de Ejemplo
+
+Al iniciar la aplicación por primera vez, se cargan automáticamente 10 direcciones de ejemplo de Lima, Perú:
+
+1. Av. Javier Prado Este - San Isidro
+2. Calle Las Begonias - San Isidro
+3. Av. Arequipa - Miraflores
+4. Jr. de la Unión - Cercado de Lima
+5. Av. La Marina - San Miguel
+6. Calle Schell - Miraflores
+7. Av. Universitaria - Los Olivos
+8. Av. Aviación - San Borja
+9. Calle Libertad - Barranco
+10. Av. Brasil - Breña
+
+## Licencia
+
+UNLICENSED
