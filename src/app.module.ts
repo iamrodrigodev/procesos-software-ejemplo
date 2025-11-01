@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { Direccion } from './direccion/entities/direccion.entity';
 import { DireccionModule } from './direccion/direccion.module';
 
@@ -15,7 +13,7 @@ import { DireccionModule } from './direccion/direccion.module';
     }),
     DireccionModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

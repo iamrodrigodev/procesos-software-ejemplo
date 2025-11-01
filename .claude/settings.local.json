@@ -3,7 +3,10 @@
     "allow": [
       "Bash(npm install:*)",
       "Bash(del \"C:\\Users\\rodrigo\\Documents\\procesos-software-ejemplo\\src\\direccion\\direccion.entity.ts\")",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(npm run start:dev:*)"
     ],
     "deny": [],
     "ask": []

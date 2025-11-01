@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
 } from '@nestjs/common';
 import { DireccionService } from './direccion.service';
 import { Direccion } from './entities/direccion.entity';
@@ -24,6 +25,11 @@ export class DireccionController {
   @Get()
   findAll(): Promise<Direccion[]> {
     return this.direccionService.findAll();
+  }
+
+  @Get('autocomplete')
+  autocomplete(@Query('parcial') parcial: string): Promise<Direccion[]> {
+    return this.direccionService.autocomplete(parcial);
   }
 
   @Get(':id')

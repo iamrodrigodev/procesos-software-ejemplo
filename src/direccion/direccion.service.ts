@@ -27,9 +27,7 @@ export class DireccionService {
     });
 
     if (!direccion) {
-      throw new NotFoundException(
-        `Dirección con ID ${id} no fue encontrada`,
-      );
+      throw new NotFoundException(`Dirección con ID ${id} no fue encontrada`);
     }
 
     return direccion;
@@ -45,5 +43,19 @@ export class DireccionService {
 
   async remove(id: number): Promise<void> {
     await this.direccionRepository.delete(id);
+  }
+
+  async autocomplete(parcial: string): Promise<Direccion[]> {
+    if (!parcial || parcial.trim().length === 0) {
+      return [];
+    }
+
+    return this.direccionRepository
+      .createQueryBuilder('direccion')
+      .where('direccion.direccion_completa LIKE :parcial', {
+        parcial: `%${parcial}%`,
+      })
+      .limit(10)
+      .getMany();
   }
 }
